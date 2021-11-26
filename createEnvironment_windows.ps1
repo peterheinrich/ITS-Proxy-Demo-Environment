@@ -1,6 +1,5 @@
-$filePath = "debian-10.10.0-amd64-netinst.iso"
-$debianURL = "https://cdimage.debian.org/cdimage/archive/10.10.0/amd64/iso-cd/debian-10.10.0-amd64-netinst.iso"
-
+$filePath = "debian-11.1.0-amd64-netinst.iso"
+$debianURL = "https://cdimage.debian.org/debian-cd/11.1.0/amd64/iso-cd/debian-11.1.0-amd64-netinst.iso"
 
 function CreateVMUnattended {
 
@@ -77,53 +76,25 @@ function WaitVMShutdown {
 }
 
 # Create and install all machines in parallel
-CreateVMUnattended -filePath $filePath -debianURL $debianURL -machineName "dc-server" -template dc-server-install.sh
-CreateVMUnattended -filePath $filePath -debianURL $debianURL -machineName "dc-router" -template dc-router-install.sh
-CreateVMUnattended -filePath $filePath -debianURL $debianURL -machineName "local-router" -template local-router-install.sh
 CreateVMUnattended -filePath $filePath -debianURL $debianURL -machineName "local-client" -template local-client-install.sh
 CreateVMUnattended -filePath $filePath -debianURL $debianURL -machineName "firewall" -template firewall-install.sh
-  
+
 # Just for safety ...
 Start-Sleep -Seconds 10
 
-# Wait for all machines to finish installing
-WaitVMShutdown -machineName "dc-server"
-WaitVMShutdown -machineName "dc-router"
-WaitVMShutdown -machineName "local-router"
 WaitVMShutdown -machineName "local-client"
 WaitVMShutdown -machineName "firewall"
-  
+
 # Just for safety ...
 Start-Sleep -Seconds 10
-
-# Configure our datacenter server
-VBoxManage modifyvm dc-server --nic1 intnet
-VBoxManage modifyvm dc-server --intnet1 net_dc
-VBoxManage modifyvm dc-server --memory 256 --vram 16 
-
-# Configure our datacenter router
-VBoxManage modifyvm dc-router --nic1 intnet
-VBoxManage modifyvm dc-router --intnet1 net_dc
-VBoxManage modifyvm dc-router --nic2 intnet
-VBoxManage modifyvm dc-router --intnet2 net_dc_ext
-VBoxManage modifyvm dc-router --memory 256 --vram 16 
-
-# Configure our local router
-VBoxManage modifyvm local-router --nic1 intnet
-VBoxManage modifyvm local-router --intnet1 net_local
-VBoxManage modifyvm local-router --nic2 intnet
-VBoxManage modifyvm local-router --intnet2 net_local_ext
-VBoxManage modifyvm local-router --memory 256 --vram 16 
 
 # Configure our local client
 VBoxManage modifyvm local-client --nic1 intnet
 VBoxManage modifyvm local-client --intnet1 net_local
-VBoxManage modifyvm local-client --memory 256 --vram 16 
+VBoxManage modifyvm local-client --memory 512 --vram 16 
 
 # Configure the main firewall
 VBoxManage modifyvm firewall --nic1 intnet
-VBoxManage modifyvm firewall --intnet1 net_dc_ext
-VBoxManage modifyvm firewall --nic2 intnet
-VBoxManage modifyvm firewall --intnet2 net_local_ext
-VBoxManage modifyvm firewall --nic3 nat
+VBoxManage modifyvm firewall --intnet1 net_local
+VBoxManage modifyvm firewall --nic2 nat
 VBoxManage modifyvm firewall --memory 256 --vram 16 
