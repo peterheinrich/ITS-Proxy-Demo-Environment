@@ -1,12 +1,12 @@
-# ITS-Firewalling-Demo-Environment
+# ITS-Proxy-Demo-Environment
 
-Welcome to this small collection of scripts to provision a demo environment consisting of bunch of network hosts to experiment with various firewalling, proxy and filtering techniques.
+Welcome to this small collection of scripts to provision a demo environment consisting of two of network hosts to experiment with proxy setups.
 
 The infrastructure is built around VirtualBox version 6. VirtualBox can be obtained from: https://www.virtualbox.org/
 
 The following drawing provides an overview of the virtual infrastructure to be instantiated.
 
-![Network Overview](https://github.com/peterheinrich/ITS-Firewalling-Demo-Environment/blob/main/overview.png)
+![Network Overview](https://github.com/peterheinrich/ITS-Proxy-Demo-Environment/blob/main/overview.png)
 
 ## General
 
