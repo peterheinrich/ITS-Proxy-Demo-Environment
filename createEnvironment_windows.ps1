@@ -76,25 +76,25 @@ function WaitVMShutdown {
 }
 
 # Create and install all machines in parallel
-CreateVMUnattended -filePath $filePath -debianURL $debianURL -machineName "local-client" -template local-client-install.sh
-CreateVMUnattended -filePath $filePath -debianURL $debianURL -machineName "firewall" -template firewall-install.sh
+CreateVMUnattended -filePath $filePath -debianURL $debianURL -machineName "proxy-client" -template proxy-client-install.sh
+CreateVMUnattended -filePath $filePath -debianURL $debianURL -machineName "proxy" -template proxy-install.sh
 
 # Just for safety ...
 Start-Sleep -Seconds 10
 
-WaitVMShutdown -machineName "local-client"
-WaitVMShutdown -machineName "firewall"
+WaitVMShutdown -machineName "proxy-client"
+WaitVMShutdown -machineName "proxy"
 
 # Just for safety ...
 Start-Sleep -Seconds 10
 
 # Configure our local client
-VBoxManage modifyvm local-client --nic1 intnet
-VBoxManage modifyvm local-client --intnet1 net_local
-VBoxManage modifyvm local-client --memory 512 --vram 16 
+VBoxManage modifyvm proxy-client --nic1 intnet
+VBoxManage modifyvm proxy-client --intnet1 proxy_local
+VBoxManage modifyvm proxy-client --memory 512 --vram 16 
 
 # Configure the main firewall
-VBoxManage modifyvm firewall --nic1 intnet
-VBoxManage modifyvm firewall --intnet1 net_local
-VBoxManage modifyvm firewall --nic2 nat
-VBoxManage modifyvm firewall --memory 256 --vram 16 
+VBoxManage modifyvm proxy --nic1 intnet
+VBoxManage modifyvm proxy --intnet1 proxy_local
+VBoxManage modifyvm proxy --nic2 nat
+VBoxManage modifyvm proxy --memory 256 --vram 16 

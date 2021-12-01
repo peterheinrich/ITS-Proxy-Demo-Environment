@@ -73,26 +73,26 @@ function WaitVMShutdown() {
 }
 
 # Create and install all machines in parallel
-CreateVMUnattended  $filePath  $debianURL  "local-client"  local-client-install.sh
-CreateVMUnattended  $filePath  $debianURL  "firewall"  firewall-install.sh
+CreateVMUnattended  $filePath  $debianURL  "proxy-client"  proxy-client-install.sh
+CreateVMUnattended  $filePath  $debianURL  "proxy"  proxy-install.sh
 
 # Just for safety ...
 sleep 10
 
 # Wait for all machines to finish installing
-WaitVMShutdown  "local-client"
-WaitVMShutdown  "firewall"
+WaitVMShutdown  "proxy-client"
+WaitVMShutdown  "proxy"
 
 # Just for safety ...
 sleep 10
 
 # Configure our local client
-VBoxManage modifyvm local-client --nic1 intnet
-VBoxManage modifyvm local-client --intnet1 net_local
-VBoxManage modifyvm local-client --memory 512 --vram 16 
+VBoxManage modifyvm proxy-client --nic1 intnet
+VBoxManage modifyvm proxy-client --intnet1 proxy_local
+VBoxManage modifyvm proxy-client --memory 512 --vram 16 
 
 # Configure the main firewall
-VBoxManage modifyvm firewall --nic1 intnet
-VBoxManage modifyvm firewall --intnet1 net_local
-VBoxManage modifyvm firewall --nic2 nat
-VBoxManage modifyvm firewall --memory 256 --vram 16 
+VBoxManage modifyvm proxy --nic1 intnet
+VBoxManage modifyvm proxy --intnet1 proxy_local
+VBoxManage modifyvm proxy --nic2 nat
+VBoxManage modifyvm proxy --memory 256 --vram 16 
