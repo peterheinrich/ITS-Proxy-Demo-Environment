@@ -1,5 +1,5 @@
 $filePath = "debian-11.1.0-amd64-netinst.iso"
-$debianURL = "https://cdimage.debian.org/debian-cd/11.1.0/amd64/iso-cd/debian-11.1.0-amd64-netinst.iso"
+$debianURL = "https://cdimage.debian.org/debian-cd/11.5.0/amd64/iso-cd/debian-11.5.0-amd64-netinst.iso"
 
 function CreateVMUnattended {
 
